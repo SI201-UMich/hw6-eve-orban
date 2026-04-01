@@ -1,7 +1,7 @@
 # SI 201 HW6 (APIs, JSON, and Caching)
-# Your name:
-# Your student id:
-# Your email:
+# Your name: Eve Orban
+# Your student id: 50136872
+# Your email: eveorban@umich.edu
 # Who or what you worked with on this homework (including generative AI like ChatGPT):
 # If you worked with generative AI also add a statement for how you used it.
 # e.g.:
@@ -36,7 +36,15 @@ def load_json(filename):
         A dictionary with the JSON data, OR an empty dictionary {} if the file
         cannot be opened or is not valid JSON.
     """
-    pass
+    json_data = {}
+
+    with open(filename, 'r') as file:
+            try:
+                json_data = json.load(file)
+                return json_data
+        
+            except:
+                return {}
 
 
 def create_cache(dictionary, filename):
@@ -51,8 +59,9 @@ def create_cache(dictionary, filename):
     RETURNS:
         None
     """
-    pass
-
+    
+    with open(filename, 'w') as file: 
+        json.dump(dictionary, file)
 
 def search_breed(breed_id):
     """
@@ -68,9 +77,17 @@ def search_breed(breed_id):
         JSON body as a dict (with a top-level 'data' key on success), OR None if the
         request failed or the response does not represent a successful breed lookup.
     """
-    pass
+    
+    url = f'https://dogapi.dog/api/v2/breeds/{breed_id}'
 
+    response = requests.get(url)
 
+    if response.status_code == 200:
+        data = response.json()
+        return (data, response.url)
+    else:
+        return None
+        
 def update_cache(breed_ids, cache_file):
     """
     For each breed_id, fetch data from the API and add it to the cache if not already present.
