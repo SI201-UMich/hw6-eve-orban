@@ -145,7 +145,7 @@ def get_longest_lifespan_breed(cache_file):
             attributes = entry['data']['attributes']
             name = attributes['name']
             lifespan = attributes['life']['max']
-            if lifespan > 0:  # filters out non-integers naturally
+            if lifespan > 0: 
                 pass
         except:
             continue
@@ -177,7 +177,32 @@ def get_groups_above_cutoff(cutoff, cache_file):
     RETURNS:
         A dictionary {group_uuid: count} for groups with count >= cutoff only.
     """
-    pass
+
+    cuttoff_dict = {}
+
+    with open(cache_file) as f:
+        cache = json.load(f)
+
+    for entry in cache.values():
+        try: 
+            data1 = entry['data']
+            relationships = data1['relationships']
+            group = relationships['group']
+            data2 = group['data']
+            id = data2['id']
+        except: 
+            continue
+    
+        if id not in cuttoff_dict:
+            cuttoff_dict[id] = 0
+        cuttoff_dict[id] += 1
+
+    result = {}
+    for id, count in cuttoff_dict.items():
+        if count >= cutoff:
+            result[id] = count
+
+    return result
 
 
 # Extra Credit
