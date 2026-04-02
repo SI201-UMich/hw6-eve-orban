@@ -226,6 +226,7 @@ def recommend_breeds_in_same_group(breed_name, cache_file):
             "No group information available for '{breed_name}'."  (no group id)
             "No recommendations found based on '{breed_name}'."  (no other breeds in that group)
     """
+    pass
 
 
 class TestHomeworkDogAPI(unittest.TestCase):
