@@ -36,16 +36,11 @@ def load_json(filename):
         A dictionary with the JSON data, OR an empty dictionary {} if the file
         cannot be opened or is not valid JSON.
     """
-    json_data = {}
-
-    with open(filename, 'r') as file:
-            try:
-                json_data = json.load(file)
-                return json_data
-        
-            except:
-                return {}
-
+    try:
+        with open(filename, 'r') as file:
+            return json.load(file)
+    except:
+        return {}
 
 def create_cache(dictionary, filename):
     """
@@ -102,8 +97,30 @@ def update_cache(breed_ids, cache_file):
         A string: "Cached data for {percentage}% of breeds",
         where percentage = (successful_new_adds / len(breed_ids)) * 100.
     """
-    pass
+    try:
+        with open(cache_file, 'r') as f: 
+            cache = json.load(f)
+    except:
+        cache = {}
+    
+    successful_new_adds = 0
 
+    for breed_id in breed_ids:
+        result = search_breed(breed_id)
+        if result is None:
+            continue
+        data, url = result
+        if url in cache: 
+            continue
+        if data:
+            cache[url] = data
+            successful_new_adds += 1
+    
+    with open(cache_file, 'w') as f:
+        json.dump(cache, f)
+    
+    percentage = (successful_new_adds / len(breed_ids)) * 100
+    return f'Cached data for {percentage}% of breeds'
 
 def get_longest_lifespan_breed(cache_file):
     """
